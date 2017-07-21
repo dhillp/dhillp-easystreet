@@ -1,0 +1,75 @@
+/**
+ * 
+ */
+package model;
+
+import java.util.Map;
+
+/**
+ * @author Pamaldeep Dhillon
+ * @version 27 October 2015
+ */
+public class Human extends AbstractVehicle {
+    
+    /** */
+    private static final int DEATH_TIME = 50;
+    
+    /** */
+    private final int myDeathTime;
+    
+    /** */
+    private final Terrain myTerrain;
+    
+    /**
+     * 
+     * @param theX X-coordinate of the vehicle.
+     * @param theY Y-coordinate of the vehicle.
+     * @param theDir Direction of the vehicle.
+     * @param theTerrain Terrain on which vehicle starts on.
+     */
+    public Human(final int theX, final int theY, final Direction theDir,
+                 final Terrain theTerrain) {
+        super(theX, theY, theDir);
+        myTerrain = theTerrain;
+        myDeathTime = DEATH_TIME;
+    }
+    
+    /**
+     * 
+     * @param theNeighbors Map containing the types of terrain that neighbor this vehicle.
+     * @return result Direction in which this vehicle would like to move.
+     */
+    public Direction chooseDirection(final Map<Direction, Terrain> theNeighbors) {
+        Direction result = Direction.random();
+        while (!canPass(theNeighbors.get(result), Light.GREEN)) {
+            result = Direction.random();
+        }
+        return result;
+    }
+    
+    /**
+     * 
+     * @param theTerrain Terrain that vehicle is trying to pass through.
+     * @param theLight Light that vehicle is trying to pass through.
+     * @return result Whether this vehicle can pass through the given terrain/light.
+     */
+    public boolean canPass(final Terrain theTerrain, final Light theLight) {
+        boolean result = false;
+        if ((myTerrain == Terrain.STREET || myTerrain == Terrain.LIGHT)
+                        && (theTerrain == Terrain.STREET || theTerrain == Terrain.LIGHT)) {
+            result = true;
+        } else if (theTerrain == myTerrain) {
+            result = true;
+        }
+        return result;
+    }
+
+    /**
+     * 
+     * @return myDeathTime Number of updates until vehicle can be revived.
+     */
+    public int getDeathTime() {
+        return myDeathTime;
+    }
+
+}

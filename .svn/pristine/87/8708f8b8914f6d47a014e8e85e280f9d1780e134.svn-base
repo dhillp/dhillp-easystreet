@@ -1,0 +1,63 @@
+/**
+ * 
+ */
+package model;
+
+import java.util.Map;
+
+/**
+ * @author Pamaldeep Dhillon
+ * @version 27 October 2015
+ */
+public final class Truck extends AbstractVehicle {
+    
+    /** */
+    private final int myDeathTime;
+    
+    /**
+     * 
+     * @param theX X-coordinate of the vehicle.
+     * @param theY Y-coordinate of the vehicle.
+     * @param theDir Direction of the vehicle.
+     */
+    public Truck(final int theX, final int theY, final Direction theDir) {
+        super(theX, theY, theDir);
+        myDeathTime = 0;
+//        myPokes = 0;
+    }
+    
+    /**
+     * 
+     * @param theNeighbors Map containing the types of terrain that neighbor this vehicle.
+     * @return result Direction in which this vehicle would like to move.
+     */
+    public Direction chooseDirection(final Map<Direction, Terrain> theNeighbors) {
+        Direction result = Direction.random();
+        if (theNeighbors.get(result) == Terrain.WALL) {
+            result = result.reverse();
+        }
+        return result;
+    }
+    
+    /**
+     * 
+     * @param theTerrain Terrain that vehicle is trying to pass through.
+     * @param theLight Light that vehicle is trying to pass through.
+     * @return result Whether this vehicle can pass through the given terrain/light.
+     */
+    public boolean canPass(final Terrain theTerrain, final Light theLight) {
+        boolean result = false;
+        if (theTerrain == Terrain.STREET || theTerrain == Terrain.LIGHT) {
+            result = true;
+        }
+        return result;
+    }
+
+    /**
+     * 
+     * @return myDeathTime Number of updates until vehicle can be revived.
+     */
+    public int getDeathTime() {
+        return myDeathTime;
+    }
+}

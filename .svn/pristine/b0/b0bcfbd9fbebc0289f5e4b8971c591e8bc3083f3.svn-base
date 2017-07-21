@@ -1,0 +1,156 @@
+/**
+ * 
+ */
+package model;
+
+import java.util.Map;
+
+/**
+ * @author Pamaldeep Dhillon
+ * @version 27 October 2015
+ */
+public abstract class AbstractVehicle implements Vehicle {
+    /** */
+    private int myX;
+    /** */
+    private final int myInitialX;
+    /** */
+    private int myY;
+    /** */
+    private final int myInitialY;
+    /** */
+    private Direction myDir;
+    /** */
+    private final Direction myInitialDir;
+    /** */
+    private boolean myAlive;
+    /** */
+    private int myPokes;
+    /**
+     * 
+     * @param theX X-coordinate of the vehicle.
+     * @param theY Y-coordinate of the vehicle.
+     * @param theDir Direction of the vehicle.
+     */
+    public AbstractVehicle(final int theX, final int theY, final Direction theDir) {
+        myX = theX;
+        myInitialX = theX;
+        myY = theY;
+        myInitialY = theY;
+        myDir = theDir;
+        myInitialDir = theDir;
+        myAlive = true;
+        myPokes = 0;
+    }
+    /**
+     * 
+     * @param theNeighbors Map containing the types of terrain that neighbor this vehicle.
+     * @return result Direction in which this vehicle would like to move.
+     */
+    public abstract Direction chooseDirection(final Map<Direction, Terrain> theNeighbors);
+    /**
+     * 
+     * @param theTerrain Terrain that vehicle is trying to pass through.
+     * @param theLight Light that vehicle is trying to pass through.
+     * @return result Whether this vehicle can pass through the given terrain/light.
+     */
+    public abstract boolean canPass(final Terrain theTerrain, final Light theLight);
+    /**
+     * 
+     * @param theOther Vehicle this vehicle is colliding with.
+     */
+    public void collide(final Vehicle theOther) {
+        if (theOther.isAlive() && this.getDeathTime() > theOther.getDeathTime()) {
+            myAlive = false;
+        }
+    }
+    /**
+     * 
+     * @return Name of the image file that the GUI will use to draw this vehicle on the screen.
+     */
+    public String getImageFileName() {
+        String result;
+        if (this.isAlive()) {
+            result = getClass().getSimpleName().toLowerCase() + ".gif";
+        } else {
+            result = getClass().getSimpleName().toLowerCase() + "_dead.gif";
+        }
+        return result;
+    }
+    /**
+     * 
+     * @return myDeathTime Number of updates until vehicle can be revived.
+     */
+    public abstract int getDeathTime();
+    /**
+     * 
+     * @return Direction of the vehicle.
+     */
+    public Direction getDirection() {
+        return myDir;
+    }
+    /**
+     * 
+     * @return X-coordinate of the vehicle.
+     */
+    public int getX() {
+        return myX;
+    }
+    /**
+     * 
+     * @return Y-coordinate of the vehicle.
+     */
+    public int getY() {
+        return myY;
+    }
+    /**
+     * 
+     * @return Whether the vehicle is alive or not.
+     */
+    public boolean isAlive() {
+        return myAlive;
+    }
+    /**
+     * 
+     */
+    public void poke() {
+        if (myPokes == this.getDeathTime()) {
+            myAlive = true;
+            this.setDirection(Direction.random());
+            myPokes = 0;
+        } else {
+            myPokes++;
+        }
+    }
+    /**
+     * 
+     */
+    public void reset() {
+        this.setX(myInitialX);
+        this.setY(myInitialY);
+        this.setDirection(myInitialDir);
+        myAlive = true;
+    }
+    /**
+     * 
+     * @param theDir New direction of the vehicle.
+     */
+    public void setDirection(final Direction theDir) {
+        myDir = theDir;
+    }
+    /**
+     * 
+     * @param theX New x-coordinate of the vehicle.
+     */
+    public void setX(final int theX) {
+        myX = theX;
+    }
+    /**
+     * 
+     * @param theY New y-coordinate of the vehicle.
+     */
+    public void setY(final int theY) {
+        myY = theY;
+    }
+    
+}
